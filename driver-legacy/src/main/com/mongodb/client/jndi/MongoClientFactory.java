@@ -20,6 +20,8 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoClientURI;
 import com.mongodb.MongoException;
+import com.mongodb.client.jndi.factory.MongoParameterFactory;
+import com.mongodb.client.jndi.parameter.MongoParameter;
 import com.mongodb.diagnostics.logging.Logger;
 import com.mongodb.diagnostics.logging.Loggers;
 
@@ -30,6 +32,7 @@ import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Map;
 
 import static java.lang.String.format;
 
@@ -67,6 +70,7 @@ public class MongoClientFactory implements ObjectFactory {
     public Object getObjectInstance(final Object obj, final Name name, final Context nameCtx, final Hashtable<?, ?> environment)
             throws Exception {
 
+
         // Some app servers, e.g. Wildfly, use the environment to pass location information to an ObjectFactory
         String connectionString = null;
 
@@ -74,22 +78,11 @@ public class MongoClientFactory implements ObjectFactory {
             connectionString = (String) environment.get(CONNECTION_STRING);
         }
 
-        Integer connectionsPerHost = null;
+        MongoClientOptions.Builder options = MongoClientOptions.builder();
 
-        if (environment.get("connectionsPerHost") instanceof String) {
-            connectionsPerHost = Integer.parseInt(environment.get("connectionsPerHost").toString());
-        }
-
-        Integer maxConnectionIdleTime = null;
-
-        if (environment.get("maxConnectionIdleTime") instanceof String) {
-            maxConnectionIdleTime = Integer.parseInt(environment.get("maxConnectionIdleTime").toString());
-        }
-
-        Integer maxConnectionLifeTime = null;
-
-        if (environment.get("maxConnectionLifeTime") instanceof String) {
-            maxConnectionLifeTime = Integer.parseInt(environment.get("maxConnectionLifeTime").toString());
+        for (Map.Entry entry : environment.entrySet()) {
+            MongoParameter mongoParameter = MongoParameterFactory.getInstance(options, entry);
+            mongoParameter.execute();
         }
 
         if (connectionString == null || connectionString.isEmpty()) {
@@ -119,20 +112,7 @@ public class MongoClientFactory implements ObjectFactory {
             throw new MongoException(format("Could not locate '%s' in either environment or obj", CONNECTION_STRING));
         }
 
-        MongoClientURI uri = null;
-
-        if (hasAllOptionsParameters(connectionsPerHost, maxConnectionIdleTime, maxConnectionLifeTime)) {
-
-            MongoClientOptions.Builder options = MongoClientOptions.builder()
-                    .connectionsPerHost(connectionsPerHost)
-                    .maxConnectionIdleTime((maxConnectionIdleTime * 1000))
-                    .maxConnectionLifeTime((maxConnectionLifeTime * 1000));
-
-            uri = new MongoClientURI(connectionString, options);
-
-        } else {
-            uri = new MongoClientURI(connectionString);
-        }
+        MongoClientURI uri = new MongoClientURI(connectionString, options);
 
         return new MongoClient(uri);
     }
