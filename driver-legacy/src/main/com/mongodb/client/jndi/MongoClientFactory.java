@@ -17,6 +17,7 @@
 package com.mongodb.client.jndi;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoClientURI;
 import com.mongodb.MongoException;
 import com.mongodb.diagnostics.logging.Logger;
@@ -73,6 +74,24 @@ public class MongoClientFactory implements ObjectFactory {
             connectionString = (String) environment.get(CONNECTION_STRING);
         }
 
+        Integer connectionsPerHost = null;
+
+        if (environment.get("connectionsPerHost") instanceof String) {
+            connectionsPerHost = Integer.parseInt(environment.get("connectionsPerHost").toString());
+        }
+
+        Integer maxConnectionIdleTime = null;
+
+        if (environment.get("maxConnectionIdleTime") instanceof String) {
+            maxConnectionIdleTime = Integer.parseInt(environment.get("maxConnectionIdleTime").toString());
+        }
+
+        Integer maxConnectionLifeTime = null;
+
+        if (environment.get("maxConnectionLifeTime") instanceof String) {
+            maxConnectionLifeTime = Integer.parseInt(environment.get("maxConnectionLifeTime").toString());
+        }
+
         if (connectionString == null || connectionString.isEmpty()) {
             LOGGER.debug(format("No '%s' property in environment.  Casting 'obj' to java.naming.Reference to look for a "
                                         + "javax.naming.RefAddr with type equal to '%s'", CONNECTION_STRING, CONNECTION_STRING));
@@ -100,8 +119,30 @@ public class MongoClientFactory implements ObjectFactory {
             throw new MongoException(format("Could not locate '%s' in either environment or obj", CONNECTION_STRING));
         }
 
-        MongoClientURI uri = new MongoClientURI(connectionString);
+        MongoClientURI uri = null;
+
+        if (hasAllOptionsParameters(connectionsPerHost, maxConnectionIdleTime, maxConnectionLifeTime)) {
+
+            MongoClientOptions.Builder options = MongoClientOptions.builder()
+                    .connectionsPerHost(connectionsPerHost)
+                    .maxConnectionIdleTime((maxConnectionIdleTime * 1000))
+                    .maxConnectionLifeTime((maxConnectionLifeTime * 1000));
+
+            uri = new MongoClientURI(connectionString, options);
+
+        } else {
+            uri = new MongoClientURI(connectionString);
+        }
 
         return new MongoClient(uri);
+    }
+
+    private boolean hasAllOptionsParameters(Object... parameters) {
+        for (Object param : parameters) {
+            if (param == null) {
+                return false;
+            }
+        }
+        return true;
     }
 }
