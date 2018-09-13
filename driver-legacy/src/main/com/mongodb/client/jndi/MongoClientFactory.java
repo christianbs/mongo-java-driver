@@ -20,8 +20,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoClientURI;
 import com.mongodb.MongoException;
-import com.mongodb.client.jndi.factory.MongoParameterFactory;
-import com.mongodb.client.jndi.parameter.MongoParameter;
+import com.mongodb.client.jndi.parameter.SupportedParameterSetterFactory;
 import com.mongodb.diagnostics.logging.Logger;
 import com.mongodb.diagnostics.logging.Loggers;
 
@@ -78,11 +77,10 @@ public class MongoClientFactory implements ObjectFactory {
             connectionString = (String) environment.get(CONNECTION_STRING);
         }
 
-        MongoClientOptions.Builder options = MongoClientOptions.builder();
+        MongoClientOptions.Builder mongoClientOptionsBuilder = MongoClientOptions.builder();
 
         for (Map.Entry entry : environment.entrySet()) {
-            MongoParameter mongoParameter = MongoParameterFactory.getInstance(options, entry);
-            mongoParameter.execute();
+            SupportedParameterSetterFactory.getInstance(mongoClientOptionsBuilder, entry).setParameter();
         }
 
         if (connectionString == null || connectionString.isEmpty()) {
@@ -112,17 +110,8 @@ public class MongoClientFactory implements ObjectFactory {
             throw new MongoException(format("Could not locate '%s' in either environment or obj", CONNECTION_STRING));
         }
 
-        MongoClientURI uri = new MongoClientURI(connectionString, options);
+        MongoClientURI uri = new MongoClientURI(connectionString, mongoClientOptionsBuilder);
 
         return new MongoClient(uri);
-    }
-
-    private boolean hasAllOptionsParameters(Object... parameters) {
-        for (Object param : parameters) {
-            if (param == null) {
-                return false;
-            }
-        }
-        return true;
     }
 }

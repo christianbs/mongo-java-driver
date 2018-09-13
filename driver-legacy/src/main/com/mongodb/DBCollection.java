@@ -1781,7 +1781,7 @@ public class DBCollection {
      * @param returnNew   when true, returns the modified document rather than the original
      * @param update      the modifications to apply
      * @param upsert      when true, operation creates a new document if the query returns no documents
-     * @param maxTime     the maximum time that the server will allow this operation to execute before killing it. A non-zero value requires
+     * @param maxTime     the maximum time that the server will allow this operation to setParameter before killing it. A non-zero value requires
      *                    a server version &gt;= 2.6
      * @param maxTimeUnit the unit that maxTime is specified in
      * @return the document as it was before the modifications, unless {@code returnNew} is true, in which case it returns the document
@@ -1811,7 +1811,7 @@ public class DBCollection {
      * @param returnNew   when true, returns the modified document rather than the original
      * @param update      performs an update of the selected document
      * @param upsert      when true, operation creates a new document if the query returns no documents
-     * @param maxTime     the maximum time that the server will allow this operation to execute before killing it. A non-zero value requires
+     * @param maxTime     the maximum time that the server will allow this operation to setParameter before killing it. A non-zero value requires
      *                    a server version &gt;= 2.6
      * @param maxTimeUnit the unit that maxTime is specified in
      * @param writeConcern the write concern to apply to this operation
@@ -1851,7 +1851,7 @@ public class DBCollection {
      * @param update      performs an update of the selected document
      * @param upsert      when true, operation creates a new document if the query returns no documents
      * @param bypassDocumentValidation whether to bypass document validation.
-     * @param maxTime     the maximum time that the server will allow this operation to execute before killing it. A non-zero value requires
+     * @param maxTime     the maximum time that the server will allow this operation to setParameter before killing it. A non-zero value requires
      *                    a server version &gt;= 2.6
      * @param maxTimeUnit the unit that maxTime is specified in
      * @return the document as it was before the modifications, unless {@code returnNew} is true, in which case it returns the document
@@ -1883,7 +1883,7 @@ public class DBCollection {
      * @param update      performs an update of the selected document
      * @param upsert      when true, operation creates a new document if the query returns no documents
      * @param bypassDocumentValidation whether to bypass document validation.
-     * @param maxTime     the maximum time that the server will allow this operation to execute before killing it. A non-zero value requires
+     * @param maxTime     the maximum time that the server will allow this operation to setParameter before killing it. A non-zero value requires
      *                    a server version &gt;= 2.6
      * @param maxTimeUnit the unit that maxTime is specified in
      * @param writeConcern the write concern to apply to this operation
@@ -2319,7 +2319,7 @@ public class DBCollection {
      * combination of inserts, updates, replaces, or removes. Write requests included in the bulk operations will be executed in order, and
      * will halt on the first failure.</p>
      *
-     * <p>Note: While this bulk write operation will execute on MongoDB 2.4 servers and below, the writes will be performed one at a time,
+     * <p>Note: While this bulk write operation will setParameter on MongoDB 2.4 servers and below, the writes will be performed one at a time,
      * as that is the only way to preserve the semantics of the value returned from execution or the exception thrown.</p>
      *
      * <p>Note: While a bulk write operation with a mix of inserts, updates, replaces, and removes is supported, the implementation will
@@ -2339,7 +2339,7 @@ public class DBCollection {
      * combination of inserts, updates, replaces, or removes. Write requests included in the bulk operation will be executed in an undefined
      * order, and all requests will be executed even if some fail.</p>
      *
-     * <p>Note: While this bulk write operation will execute on MongoDB 2.4 servers and below, the writes will be performed one at a time,
+     * <p>Note: While this bulk write operation will setParameter on MongoDB 2.4 servers and below, the writes will be performed one at a time,
      * as that is the only way to preserve the semantics of the value returned from execution or the exception thrown.</p>
      *
      * @return the builder

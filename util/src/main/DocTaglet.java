@@ -25,7 +25,7 @@ import java.util.Set;
 import static java.util.Arrays.asList;
 import static jdk.javadoc.doclet.Taglet.Location.*;
 
-public abstract class DocTaglet implements Taglet {
+public abstract class DocTaglet implements Taglet {n
 
     @Override
     public Set<Location> getAllowedLocations() {

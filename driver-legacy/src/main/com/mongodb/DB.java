@@ -445,7 +445,7 @@ public class DB {
      * Executes a database command. This method constructs a simple DBObject using {@code command} as the field name and {@code true} as its
      * value, and calls {@link DB#command(DBObject, ReadPreference) } with the default read preference for the database.
      *
-     * @param command command to execute
+     * @param command command to setParameter
      * @return result of command from the database
      * @throws MongoException if the command failed
      * @mongodb.driver.manual tutorial/use-database-commands Commands
@@ -485,7 +485,7 @@ public class DB {
      * Executes a database command with the selected readPreference, and encodes the command using the given encoder.
      *
      * @param command        The {@code DBObject} representation the command to be executed
-     * @param readPreference Where to execute the command - this will only be applied for a subset of commands
+     * @param readPreference Where to setParameter the command - this will only be applied for a subset of commands
      * @param encoder        The DBEncoder that knows how to serialise the command
      * @return The result of executing the command, success or failure
      * @mongodb.driver.manual tutorial/use-database-commands Commands
@@ -503,7 +503,7 @@ public class DB {
      * Executes the command against the database with the given read preference.
      *
      * @param command        The {@code DBObject} representation the command to be executed
-     * @param readPreference Where to execute the command - this will only be applied for a subset of commands
+     * @param readPreference Where to setParameter the command - this will only be applied for a subset of commands
      * @return The result of executing the command, success or failure
      * @mongodb.driver.manual tutorial/use-database-commands Commands
      * @since 2.12
@@ -517,7 +517,7 @@ public class DB {
      * }.
      *
      * @param command        The name of the command to be executed
-     * @param readPreference Where to execute the command - this will only be applied for a subset of commands
+     * @param readPreference Where to setParameter the command - this will only be applied for a subset of commands
      * @return The result of the command execution
      * @throws MongoException if the command failed
      * @mongodb.driver.manual tutorial/use-database-commands Commands
@@ -674,7 +674,7 @@ public class DB {
     }
 
     /**
-     * Makes it possible to execute "read" queries on a slave node
+     * Makes it possible to setParameter "read" queries on a slave node
      *
      * @see ReadPreference#secondaryPreferred()
      * @deprecated Replaced with {@code ReadPreference.secondaryPreferred()}

@@ -4,16 +4,16 @@ import com.mongodb.MongoClientOptions;
 
 import java.util.Map;
 
-public abstract class MongoParameter {
+public abstract class SupportedParameterSetter {
 
     protected Map.Entry option;
     protected MongoClientOptions.Builder mongoClientOptions;
 
-    public MongoParameter(MongoClientOptions.Builder mongoClientOptions, Map.Entry option) {
+    public SupportedParameterSetter(MongoClientOptions.Builder mongoClientOptions, Map.Entry option) {
         this.mongoClientOptions = mongoClientOptions;
         this.option = option;
     }
 
-    public abstract void execute();
+    public abstract void setParameter();
 
 }

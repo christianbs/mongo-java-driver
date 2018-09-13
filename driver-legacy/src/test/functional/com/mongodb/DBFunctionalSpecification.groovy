@@ -36,7 +36,7 @@ class DBFunctionalSpecification extends FunctionalSpecification {
             execute(_, _, _) >> {
                 throw new MongoCommandException(new BsonDocument('ok', new BsonDouble(0))
                                                           .append('code', new BsonInt32(13))
-                                                          .append('errmsg', new BsonString('not authorized on admin to execute ' +
+                                                          .append('errmsg', new BsonString('not authorized on admin to setParameter ' +
                                                                                            'command { usersInfo: "admin" }')),
                                                   new ServerAddress())
             }
@@ -72,7 +72,7 @@ class DBFunctionalSpecification extends FunctionalSpecification {
             execute(_, _, _) >> {
                 throw new MongoCommandException(new BsonDocument('ok', new BsonDouble(0))
                                                           .append('code', new BsonInt32(13))
-                                                          .append('errmsg', new BsonString('not authorized on admin to execute ' +
+                                                          .append('errmsg', new BsonString('not authorized on admin to setParameter ' +
                                                                                            'command { usersInfo: "admin" }')),
                                                   new ServerAddress())
             }

@@ -477,7 +477,7 @@ public class DBCursor implements Cursor, Iterable<DBObject> {
      *     <li><i>cursor:</i> cursor type</li>
      *     <li><i>nScanned:</i> number of records examined by the database for this query </li>
      *     <li><i>n:</i> the number of records that the database returned</li>
-     *     <li><i>millis:</i> how long it took the database to execute the query</li>
+     *     <li><i>millis:</i> how long it took the database to setParameter the query</li>
      * </ul>
      *
      * @return a {@code DBObject} containing the explain output for this DBCursor's query

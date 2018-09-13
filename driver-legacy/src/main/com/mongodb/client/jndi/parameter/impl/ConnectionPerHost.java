@@ -1,19 +1,18 @@
 package com.mongodb.client.jndi.parameter.impl;
 
 import com.mongodb.MongoClientOptions;
-import com.mongodb.client.jndi.parameter.MongoParameter;
+import com.mongodb.client.jndi.parameter.SupportedParameterSetter;
 
 import java.util.Map;
 
-public class ConnectionPerHostMongoClientOption extends MongoParameter {
+public class ConnectionPerHost extends SupportedParameterSetter {
 
-
-    public ConnectionPerHostMongoClientOption(MongoClientOptions.Builder mongoClientOptions, Map.Entry option) {
+    public ConnectionPerHost(MongoClientOptions.Builder mongoClientOptions, Map.Entry option) {
         super(mongoClientOptions, option);
     }
 
     @Override
-    public void execute() {
+    public void setParameter() {
         Integer connectionsPerHost = Integer.parseInt(option.getValue().toString());
         mongoClientOptions.connectionsPerHost(connectionsPerHost);
     }

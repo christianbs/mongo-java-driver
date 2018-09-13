@@ -322,7 +322,7 @@ class MongoClientSessionSpecification extends FunctionalSpecification {
 
     // This test attempts attempts to demonstrate that causal consistency works correctly by inserting a document and then immediately
     // searching for that document on a secondary by its _id and failing the test if the document is not found.  Without causal consistency
-    // enabled the expectation is that eventually that test would fail since generally the find will execute on the secondary before
+    // enabled the expectation is that eventually that test would fail since generally the find will setParameter on the secondary before
     // the secondary has a chance to replicate the document.
     // This test is inherently racy as it's possible that the server _does_ replicate fast enough and therefore the test passes anyway
     // even if causal consistency was not actually in effect.  For that reason the test iterates a number of times in order to increase
