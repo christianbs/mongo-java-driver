@@ -1,4 +1,4 @@
-package com.mongodb.client.jndi.parameter;
+package com.mongodb.client.jndi.parameter.constant;
 
 import com.mongodb.client.jndi.parameter.impl.ConnectionPerHost;
 import com.mongodb.client.jndi.parameter.impl.MaxConnectionIdleTime;

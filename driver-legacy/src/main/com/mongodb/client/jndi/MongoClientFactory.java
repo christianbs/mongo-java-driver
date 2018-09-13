@@ -20,7 +20,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoClientURI;
 import com.mongodb.MongoException;
-import com.mongodb.client.jndi.parameter.SupportedParameterSetterFactory;
+import com.mongodb.client.jndi.parameter.factory.SupportedParameterSetterFactory;
 import com.mongodb.diagnostics.logging.Logger;
 import com.mongodb.diagnostics.logging.Loggers;
 

@@ -1,6 +1,8 @@
-package com.mongodb.client.jndi.parameter;
+package com.mongodb.client.jndi.parameter.factory;
 
 import com.mongodb.MongoClientOptions;
+import com.mongodb.client.jndi.parameter.SupportedParameterSetter;
+import com.mongodb.client.jndi.parameter.constant.SupportedParameter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
