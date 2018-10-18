@@ -29,6 +29,7 @@ import javax.naming.Name;
 import javax.naming.RefAddr;
 import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Map;
@@ -55,15 +56,14 @@ public class MongoClientFactory implements ObjectFactory {
      * <li>As the {@code String} value of a {@link RefAddr} with type {@code "connectionString"} in an {@code obj} parameter
      * of type {@link Reference}</li>
      * </ul>
-     *
+     * <p>
      * Specification of the connection string in the {@code environment} parameter takes precedence over specification in the {@code obj}
      * parameter.  The {@code name} and {@code nameCtx} parameters are ignored.
-     *
+     * <p>
      * If a non-empty connection string is not specified in either of these two ways, a {@link MongoException} is thrown.
-     * @return an instance of {@link MongoClient} based on the specified connection string
-     * @throws MongoException
      *
-     * Note: Not all options that can be specified via {@link com.mongodb.MongoClientOptions} can be specified via the connection string.
+     * @return an instance of {@link MongoClient} based on the specified connection string
+     * @throws MongoException Note: Not all options that can be specified via {@link com.mongodb.MongoClientOptions} can be specified via the connection string.
      */
     @Override
     public Object getObjectInstance(final Object obj, final Name name, final Context nameCtx, final Hashtable<?, ?> environment)
@@ -77,15 +77,9 @@ public class MongoClientFactory implements ObjectFactory {
             connectionString = (String) environment.get(CONNECTION_STRING);
         }
 
-        MongoClientOptions.Builder mongoClientOptionsBuilder = MongoClientOptions.builder();
-
-        for (Map.Entry entry : environment.entrySet()) {
-            SupportedParameterSetterFactory.getInstance(mongoClientOptionsBuilder, entry).setParameter();
-        }
-
         if (connectionString == null || connectionString.isEmpty()) {
             LOGGER.debug(format("No '%s' property in environment.  Casting 'obj' to java.naming.Reference to look for a "
-                                        + "javax.naming.RefAddr with type equal to '%s'", CONNECTION_STRING, CONNECTION_STRING));
+                    + "javax.naming.RefAddr with type equal to '%s'", CONNECTION_STRING, CONNECTION_STRING));
 
             // Some app servers, e.g. Tomcat, pass obj as an instance of javax.naming.Reference and pass location information in a
             // javax.naming.RefAddr
@@ -110,8 +104,18 @@ public class MongoClientFactory implements ObjectFactory {
             throw new MongoException(format("Could not locate '%s' in either environment or obj", CONNECTION_STRING));
         }
 
-        MongoClientURI uri = new MongoClientURI(connectionString, mongoClientOptionsBuilder);
+        MongoClientURI uri = new MongoClientURI(connectionString, getMongoClientOptionsBuilder(environment));
 
         return new MongoClient(uri);
+    }
+
+    private MongoClientOptions.Builder getMongoClientOptionsBuilder(Hashtable<?, ?> environment) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
+        MongoClientOptions.Builder mongoClientOptionsBuilder = MongoClientOptions.builder();
+        for (Map.Entry<?, ?> entry : environment.entrySet()) {
+            if (!CONNECTION_STRING.equals(entry.getKey())) {
+                SupportedParameterSetterFactory.getInstance(mongoClientOptionsBuilder, entry).setParameter();
+            }
+        }
+        return mongoClientOptionsBuilder;
     }
 }
